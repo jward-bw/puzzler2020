@@ -66,14 +66,14 @@ I found that by converting the graph into directional graph, doubling the edges 
 
 ```bash
 $ cat src/bin/short.rs | wc -c
-364
+344
 $ time target/release/short | awk '{print length, $0}' | sort -nr | head -n 4
 9 snowshoer
 9 reconsole
 9 horologer
 9 gonyocele
 
-real	0m0.159s
-user	0m0.154s
-sys	0m0.012s
+real	0m0.148s
+user	0m0.148s
+sys	0m0.011s
 ```
