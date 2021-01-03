@@ -80,3 +80,21 @@ real	0m0.148s
 user	0m0.148s
 sys	0m0.011s
 ```
+
+### UPDATE: Even fasterer and shorterer.
+
+By converting the dictionary word into a slice of u8s rather than converting into an iterator of chars anc collecting into a Vec, we can shave off about 100ms (was taking less than 50ms). Unfortunately I also realised that this solution didn't consider dictionary words which had uppercase characters, so in fixing that I have slowed down the code and used more characters. This solution is at least 1 character longer than it needs to be. It takes one more character to transform the pairs of characters to lowercase than the entire word, but since the majority of words in the dictionary are not valid words in the graph only performing the operation on pairs represents a significant speedup (~30ms):
+
+```bash
+$ cat src/bin/short.rs | wc -c
+342
+gascon:puzzler2020 jward$ time target/release/short | awk '{print length, $0}' | sort -nr | head -n 4
+9 snowshoer
+9 reconsole
+9 horologer
+9 gonyocele
+
+real	0m0.090s
+user	0m0.090s
+sys	0m0.011s
+```
