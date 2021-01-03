@@ -25,24 +25,29 @@ user	0m0.104s
 sys	0m0.013s
 ```
 
+### UPDATE: Faster!
+
+Inspired by my changes to the short binary, I changed this code to only convert the first character of each word to lowercase, rather than the entire word. This sped-up the code by roughly 3x! (I hope the assumption that only the first character of a word is uppercase is valid.)
+
+```bash
+$ time target/release/quick | awk '{print length, $0}' | sort -nr | head -n 4
+9 snowshoer
+9 reconsole
+9 horologer
+9 gonyocele
+
+real	0m0.035s
+user	0m0.035s
+sys	0m0.010s
+```
+
 ## short (src/bin/short.rs)
 
 I also wanted to try making a solution with as few characters as possible to rival Chris and JohnM's short python solutions. I knew it was very unlikely I'd be able to achieve the same levels of brevity as those solutions using Rust, so I started by working out the smallest possible encoding of the graph.
 
 The two options were loading the data from file/stdin or having a short text encoding in the code. Due to the strong typing and safety in Rust, loading data from stdin/file requires unwrapping lots of Result types, so I resorted to finding a succinct textual representation of the graph.
 
-The best way I found to represent the graph as a string of characters was as an Eulerian path (a trail which visits every edge exactly once). Unfortunately an Eulerian path is only possible on a graph which has exactly 0 or 2 vertices with an odd degree, and our graph has 10 vertices with an odd degree. To fix this we can add redundant edges until we have a graph with only 2 vertices with an odd degree:
-
-Original graph:
-
-![image](https://user-images.githubusercontent.com/53442247/103480118-3ef66600-4dca-11eb-95c3-267b72844e49.png)
-
-Augmented graph:
-
-![image](https://user-images.githubusercontent.com/53442247/103480101-29813c00-4dca-11eb-82eb-1a87434d5654.png)
-
-
-[There is a nice algorithm](https://en.wikipedia.org/wiki/Eulerian_path#Hierholzer's_algorithm) to find the final Eulerian path by joining Eulerian circuits of subgraphs, which gave this solution: `rownsholrelegontoecoshgcrbyntybltboyswgwhc`. The rest of the code is pretty straightforward; the code searches the path string for each 2 character pair in each dictionary word (and each pair may need to be reversed, since the graph encoding isn't guaranteed to have both directions for each edge).
+The best way I found to represent the graph as a string of characters was as an Eulerian path (a trail which visits every edge exactly once). Unfortunately an Eulerian path is only possible on a graph which has exactly 0 or 2 vertices with an odd degree, and our graph has 10 vertices with an odd degree. To fix this we can add redundant edges until we have a graph with only 2 vertices with an odd degree. [There is a nice algorithm](https://en.wikipedia.org/wiki/Eulerian_path#Hierholzer's_algorithm) to find the final Eulerian path by joining Eulerian circuits of subgraphs, which gave this solution: `rownsholrelegontoecoshgcrbyntybltboyswgwhc`. The rest of the code is pretty straightforward; the code searches the path string for each 2 character pair in each dictionary word (and each pair may need to be reversed, since the graph encoding isn't guaranteed to have both directions for each edge).
 
 The total number of characters in the source file is 432:
 ```bash
@@ -88,7 +93,7 @@ By converting the dictionary word into a slice of u8s rather than converting int
 ```bash
 $ cat src/bin/short.rs | wc -c
 342
-gascon:puzzler2020 jward$ time target/release/short | awk '{print length, $0}' | sort -nr | head -n 4
+$ time target/release/short | awk '{print length, $0}' | sort -nr | head -n 4
 9 snowshoer
 9 reconsole
 9 horologer
@@ -98,3 +103,23 @@ real	0m0.090s
 user	0m0.090s
 sys	0m0.011s
 ```
+
+### Final update: Longer and (slightly) slower 😢
+
+Unfortunately my code was incorrectly allowing all single character words. I couldn't think of a good solution to integrate this into my current method, so I've appended it as a separate check. This has added quite a few characters, but not increased the runtime by much. There's probably a nice way to do this, but I have run out of time to work on it!
+
+```bash 
+$ cat src/bin/short.rs | wc -c
+395
+$ time target/release/short | awk '{print length, $0}' | sort -nr | head -n 4
+9 snowshoer
+9 reconsole
+9 horologer
+9 gonyocele
+
+real	0m0.092s
+user	0m0.092s
+sys	0m0.009s
+```
+
+

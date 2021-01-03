@@ -1,4 +1,5 @@
 use std::io::BufRead;
+static UNUSED_CHARS: &[char] = &['a','d','f','i','j','k','m','p','q','u','v','x','z'];
 fn main() {
     std::io::BufReader::new(std::fs::File::open("/usr/share/dict/words").unwrap())
         .lines()
@@ -6,13 +7,13 @@ fn main() {
 }
 
 fn check(word: String) {
-    let lower = word.to_lowercase();
-    let mut chars = lower.chars();
+    let mut chars = word.chars();
     let mut first;
     match chars.next() {
-        Some(c) => first = c,
+        Some(c) => first = c.to_ascii_lowercase(),
         None => return,
     }
+    if UNUSED_CHARS.contains(&first) {return};
     while let Some(second) = chars.next() {
         if !valid(&first, &second) {
             return;
