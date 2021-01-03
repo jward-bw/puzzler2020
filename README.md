@@ -35,11 +35,14 @@ The best way I found to represent the graph as a string of characters was as an 
 
 Original graph:
 
+![image](https://user-images.githubusercontent.com/53442247/103480118-3ef66600-4dca-11eb-95c3-267b72844e49.png)
 
 Augmented graph:
 
+![image](https://user-images.githubusercontent.com/53442247/103480101-29813c00-4dca-11eb-82eb-1a87434d5654.png)
 
-[There is a nice algorithm](https://en.wikipedia.org/wiki/Eulerian_path#Hierholzer's_algorithm) to find the final Eulerian path by joining Eulerian circuits of subgraphs, which gave this solution: `rownsholrelegontoecoshgcrbyntybltboyswgwhc`. The rest of the code is pretty straightforward; the code searches the path string for each 2 character pair in each dictionary word (and each pair may need to be reversed, since the graph encoding isn't guaranteed to have both directions for each edge.
+
+[There is a nice algorithm](https://en.wikipedia.org/wiki/Eulerian_path#Hierholzer's_algorithm) to find the final Eulerian path by joining Eulerian circuits of subgraphs, which gave this solution: `rownsholrelegontoecoshgcrbyntybltboyswgwhc`. The rest of the code is pretty straightforward; the code searches the path string for each 2 character pair in each dictionary word (and each pair may need to be reversed, since the graph encoding isn't guaranteed to have both directions for each edge).
 
 The total number of characters in the source file is 432:
 ```bash
