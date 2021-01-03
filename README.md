@@ -44,6 +44,7 @@ visits every edge exactly once). Unfortunately an Eulerian path is only possible
 redundant edges until we have a graph with only 2 vertices with an odd degree:
 
 Original graph:
+
 ![image](https://user-images.githubusercontent.com/53442247/103480118-3ef66600-4dca-11eb-95c3-267b72844e49.png)
 
 Augmented graph:
